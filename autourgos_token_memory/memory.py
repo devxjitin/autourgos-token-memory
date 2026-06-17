@@ -7,7 +7,7 @@ import threading
 from datetime import datetime, timezone
 from typing import Callable, List, Optional
 
-from autourgos_memory import BaseMemory, MemoryMessage
+from .base import BaseMemory, MemoryMessage
 
 
 def _default_token_estimator(text: Optional[str]) -> int:
