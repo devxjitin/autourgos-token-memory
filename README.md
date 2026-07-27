@@ -19,10 +19,14 @@ pip install 'autourgos-token-memory[tiktoken]'
 
 ## Quick Start
 
+`my_llm` below is any chat-model instance, e.g. `OpenAIChatModel` from `autourgos-openaichat` (`pip install autourgos-openaichat`). See that package's README for setup.
+
 ```python
 from autourgos_token_memory import TokenBufferedMemory
 from autourgos_react_agent import ReactAgent
+from autourgos_openaichat import OpenAIChatModel
 
+my_llm = OpenAIChatModel(model="gpt-4o-mini")  # needs OPENAI_API_KEY set
 memory = TokenBufferedMemory(max_tokens=4000)
 agent  = ReactAgent(llm=my_llm, memory=memory)
 agent.invoke("Long conversation task...")

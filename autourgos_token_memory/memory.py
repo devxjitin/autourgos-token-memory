@@ -3,11 +3,15 @@ memory.py — Token-bounded short-term memory.
 """
 from __future__ import annotations
 
+import logging
 import threading
+from collections import deque
 from datetime import datetime, timezone
-from typing import Callable, List, Optional
+from typing import Callable, Deque, List, Optional
 
 from .base import BaseMemory, MemoryMessage
+
+logger = logging.getLogger(__name__)
 
 
 def _default_token_estimator(text: Optional[str]) -> int:
@@ -18,8 +22,14 @@ def _default_token_estimator(text: Optional[str]) -> int:
         import tiktoken
         enc = tiktoken.get_encoding("cl100k_base")
         return len(enc.encode(text, disallowed_special=()))
-    except Exception:
+    except (ImportError, ModuleNotFoundError):
         pass
+    except Exception:
+        logger.warning(
+            "tiktoken is installed but token estimation failed; "
+            "falling back to heuristic estimator.",
+            exc_info=True,
+        )
     # Unicode-aware heuristic
     total = 0.0
     for ch in text:
@@ -59,7 +69,7 @@ class TokenBufferedMemory(BaseMemory):
             raise ValueError("max_tokens must be an integer >= 1")
         self.max_tokens      = max_tokens
         self.token_estimator = token_estimator or _default_token_estimator
-        self._messages: List[MemoryMessage] = []
+        self._messages: Deque[MemoryMessage] = deque()
         self._total_tokens = 0
         self._lock = threading.RLock()
 
@@ -68,7 +78,16 @@ class TokenBufferedMemory(BaseMemory):
 
     def _enforce_limit(self) -> None:
         while self._messages and self._total_tokens > self.max_tokens:
-            removed = self._messages.pop(0)
+            if len(self._messages) == 1:
+                only_msg = self._messages[0]
+                if self._msg_tokens(only_msg) > self.max_tokens:
+                    logger.warning(
+                        "message exceeds max_tokens budget by itself; keeping anyway "
+                        "(role=%r, tokens=%d, max_tokens=%d)",
+                        only_msg.role, self._msg_tokens(only_msg), self.max_tokens,
+                    )
+                    break
+            removed = self._messages.popleft()
             self._total_tokens -= self._msg_tokens(removed)
 
     def add_message(self, role: str, content: str, timestamp: Optional[datetime] = None) -> MemoryMessage:
