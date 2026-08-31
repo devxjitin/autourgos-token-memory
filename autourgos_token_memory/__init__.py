@@ -13,6 +13,6 @@ try:
     from importlib.metadata import version as _v
     __version__ = _v("autourgos-token-memory")
 except Exception:
-    __version__ = "2.0.0"
+    __version__ = "2.0.2"
 
 __all__ = ["TokenBufferedMemory"]
