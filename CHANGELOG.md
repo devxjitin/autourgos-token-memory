@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.3] - 2026-09-01
+
+- Metadata: added `maintainers` (Sonia, Vishwanil Suman) to `pyproject.toml`,
+  and linked the README's existing Sonia contributor badge to her GitHub
+  profile (https://github.com/dahiyasonia). No code changes.
+
 ## [2.0.1] - 2026-07-27
 
 - Fixed: standardized logger to logging.getLogger(__name__); a single message whose token count alone exceeds max_tokens is now kept (with a warning) instead of being silently evicted.
