@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.0.4] - 2026-09-03
+
+- Added `features.md` documenting the module's feature set and a competitor comparison. No code changes.
+
+
 ## [2.0.3] - 2026-09-01
 
 - Metadata: added `maintainers` (Sonia, Vishwanil Suman) to `pyproject.toml`,
