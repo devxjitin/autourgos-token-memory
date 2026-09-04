@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "autourgos-token-memory"
-version = "2.0.5"
+version = "2.1.0"
 description = "Token-bounded short-term memory for Autourgos agents — TokenBufferedMemory."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -27,7 +27,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
-dependencies = ["autourgos-memory>=1.0.1", "autourgos-core>=0.3.0"]
+dependencies = ["autourgos-memory>=1.2.0", "autourgos-core>=0.3.0"]
 [project.optional-dependencies]
 tiktoken = ["tiktoken>=0.5"]
 

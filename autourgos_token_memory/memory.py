@@ -9,7 +9,7 @@ from collections import deque
 from datetime import datetime, timezone
 from typing import Callable, Deque, List, Optional
 
-from .base import BaseMemory, MemoryMessage
+from .base import BaseMemory, MemoryMessage, format_conversation_banner
 
 logger = logging.getLogger(__name__)
 
@@ -98,15 +98,6 @@ class TokenBufferedMemory(BaseMemory):
             self._enforce_limit()
             return msg
 
-    def add_user_message(self, content: str) -> MemoryMessage:
-        return self.add_message("user", content)
-
-    def add_agent_message(self, content: str) -> MemoryMessage:
-        return self.add_message("agent", content)
-
-    def add_tool_message(self, tool_name: str, result: str) -> MemoryMessage:
-        return self.add_message("tool", f"[{tool_name} returned]: {result}")
-
     def get_messages(self) -> List[MemoryMessage]:
         with self._lock:
             return list(self._messages)
@@ -118,10 +109,7 @@ class TokenBufferedMemory(BaseMemory):
 
     def format_for_llm(self, query: Optional[str] = None) -> str:
         with self._lock:
-            if not self._messages:
-                return ""
-            lines = "\n".join(f"[{m.timestamp.isoformat()}] {m.role}: {m.content}" for m in self._messages)
-            return f"\n--- Previous Conversation Context ---\n{lines}\n--------------------------------------\n"
+            return format_conversation_banner(list(self._messages))
 
     def clear(self) -> None:
         with self._lock:

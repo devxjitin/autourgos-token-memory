@@ -56,6 +56,14 @@ def test_get_messages_returns_list_type_and_clear_works():
     assert mem.total_tokens == 0
 
 
+def test_add_system_message():
+    mem = TokenBufferedMemory(max_tokens=1000)
+    msg = mem.add_system_message("policy note")
+    assert msg.role == "system"
+    assert msg.content == "policy note"
+    assert [m.role for m in mem.get_messages()] == ["system"]
+
+
 def test_default_token_estimator_import_error_is_silent(monkeypatch, caplog):
     # Simulate tiktoken not being installed: should fall back silently,
     # no warning logged.
