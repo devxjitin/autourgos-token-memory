@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.5] - 2026-09-04
+
+- Internal: `__version__` resolution moved to `autourgos_core.package_version()` (new `autourgos-core>=0.3.0` dependency). No functional change.
+
 ## [2.0.4] - 2026-09-03
 
 - Added `features.md` documenting the module's feature set and a competitor comparison. No code changes.

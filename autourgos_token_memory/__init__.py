@@ -9,10 +9,8 @@ Install with tiktoken for accurate counts::
 """
 from .memory import TokenBufferedMemory, _default_token_estimator
 
-try:
-    from importlib.metadata import version as _v
-    __version__ = _v("autourgos-token-memory")
-except Exception:
-    __version__ = "2.0.4"
+from autourgos_core import package_version
+
+__version__ = package_version("autourgos-token-memory", fallback="2.0.5")
 
 __all__ = ["TokenBufferedMemory"]
